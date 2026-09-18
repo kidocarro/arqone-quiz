@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Em que ponto da decisão a sua obra está? | Arq One</title>
+<meta name="description" content="Dez perguntas, cerca de três minutos. No final, você recebe a ordem das decisões do seu projeto — arquitetura, interiores e marcenaria — e o que a Arq One entrega em cada uma.">
+<!--
+  QUIZ DE QUALIFICAÇÃO · Arq One · v2
+  Identidade visual OFICIAL (Manual de Marca v2). Uma pergunta por tela, ramificação por escopo
+  (arquitetura / interiores / ambos), pequenas vitórias com dado e fonte, e um resultado em forma de
+  PLANO: a ordem das decisões do lead + o entregável do Método VisionOne que responde a cada uma.
+  Configuração em CONFIG (no script). Faixas de investimento: PENDENTES de confirmação com o cliente.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        marrom: '#66432F', 'marrom-hover': '#573928', 'marrom-medio': '#B0987E',
+        bege: '#E6DED3', verde: '#7F7554', 'verde-texto': '#796F50', 'verde-claro': '#E5E2CF', offwhite: '#FFFAF5'
+      },
+      fontFamily: { sans: ['"DM Sans"', 'system-ui', 'sans-serif'] },
+      borderRadius: { marca: '2px' }
+    }
+  }
+}
+</script>
+<style>
+  body { -webkit-font-smoothing: antialiased; }
+  h1[tabindex="-1"]:focus { outline: none; }
+  .screen { transition: opacity .28s ease, transform .28s ease; }
+  .screen.enter { opacity: 0; transform: translateX(28px); }
+  .screen.leave { opacity: 0; transform: translateX(-28px); pointer-events: none; }
+  .screen.win.enter { transform: scale(.985); }
+  .opt[aria-pressed="true"] { background: #66432F; color: #FFFAF5; border-color: #66432F; }
+  .opt:hover { background: #E6DED3; }
+  .opt[aria-pressed="true"]:hover { background: #66432F; }
+  .opt[aria-pressed="true"] .sub { color: #E6DED3; }
+  .opt .check { display: none; }
+  .opt[aria-pressed="true"] .check { display: inline-block; }
+  #bar { transition: width .45s cubic-bezier(.2,.7,.2,1); }
+  .ack { transition: opacity .3s ease, transform .3s ease; opacity: 0; transform: translateY(4px); }
+  .ack.show { opacity: 1; transform: none; }
+  input[type=range] { -webkit-appearance: none; width: 100%; height: 2px; background: #E6DED3; outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; background: #66432F; border: 0; border-radius: 2px; cursor: pointer; }
+  input[type=range]::-moz-range-thumb { width: 28px; height: 28px; background: #66432F; border: 0; border-radius: 2px; cursor: pointer; }
+  input[type=range]:focus-visible::-webkit-slider-thumb { outline: 2.5px solid #7F7554; outline-offset: 3px; }
+  /* motif (haste + quarto de arco) — placeholder do pattern; substituir pelo vetor oficial */
+  .motif { position: absolute; right: -60px; bottom: -40px; width: min(52vw, 420px); opacity: .55; pointer-events: none; }
+  .plan-item { animation: rise .5s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .screen, #bar, .ack { transition: none !important; } .plan-item { animation: none; } }
+</style>
+</head>
+<body class="bg-offwhite text-marrom font-sans min-h-screen flex flex-col">
+
+<header class="border-b border-marrom/15">
+  <div class="max-w-[720px] mx-auto px-[8vw] sm:px-8 py-4 flex items-center justify-between gap-4">
+    <!-- LOGOTIPO: substituir pelo vetor oficial (Var. 1, sem descritivo), sempre em campo sólido -->
+    <a href="https://arqone.com.br/" class="text-[15px] font-medium tracking-[.08em] no-underline">ARQ ONE <span class="text-marrom-medio tracking-[.02em] hidden sm:inline">· arquitetura e interiores</span></a>
+    <span id="step-label" class="text-[11px] font-semibold tracking-[.16em] uppercase text-verde-texto" aria-live="polite"></span>
+  </div>
+  <div class="h-[2px] bg-bege"><div id="bar" class="h-full bg-marrom w-0" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Progresso do diagnóstico"></div></div>
+</header>
+
+<main class="flex-1 relative overflow-hidden">
+  <div id="stage" class="max-w-[720px] mx-auto px-[8vw] sm:px-8 py-10 sm:py-16"></div>
+</main>
+
+<footer class="border-t border-marrom/15">
+  <div class="max-w-[720px] mx-auto px-[8vw] sm:px-8 py-4 text-[14px] text-verde-texto flex flex-wrap gap-x-4 gap-y-1">
+    <span>Arq One · Arquitetura e Interiores · Rio Preto (SP)</span>
+    <a class="underline" href="https://wa.me/5517996799933" rel="noopener">Falar com um arquiteto</a>
+  </div>
+</footer>
+
+<script>
+/* ============================ CONFIGURAÇÃO ============================ */
+const CONFIG = {
+  WHATSAPP: '5517996799933',
+  WEBHOOK_URL: '',                       // URL do CRM/webhook (POST JSON). Vazio = não envia.
+  CALCULADORA_URL: 'https://arqone-calculadora.vercel.app/',
+  METODO_URL: 'https://arqone.com.br/#metodo',
+  // Faixas de investimento — PENDENTES de confirmação com o cliente (Book Base, bloco 15, item 8)
+  FAIXAS_OBRA: [
+    { id: 'ate300',  label: 'Até R$ 300 mil',            pts: 0 },
+    { id: '300a600', label: 'R$ 300 mil a R$ 600 mil',   pts: 2 },
+    { id: '600a1m',  label: 'R$ 600 mil a R$ 1 milhão',  pts: 3 },
+    { id: 'mais1m',  label: 'Acima de R$ 1 milhão',      pts: 3 },
+    { id: 'naosei',  label: 'Ainda não sei',             pts: 1 }
+  ],
+  FAIXAS_INTERIORES: [
+    { id: 'ate80',   label: 'Até R$ 80 mil',             pts: 0 },
+    { id: '80a200',  label: 'R$ 80 mil a R$ 200 mil',    pts: 2 },
+    { id: '200a400', label: 'R$ 200 mil a R$ 400 mil',   pts: 3 },
+    { id: 'mais400', label: 'Acima de R$ 400 mil',       pts: 3 },
+    { id: 'naosei',  label: 'Ainda não sei',             pts: 1 }
+  ],
+  QUENTE: 5, MORNO: 3   // quente ≥ 5 · morno 3–4 · frio ≤ 2
+};
+
+// Imagens (geradas no Higgsfield, 18/09/2026). Para hospedar localmente: salvar em img/ com os mesmos nomes e trocar as URLs.
+const IMG = {
+  intro: 'https://d8j0ntlcm91z4.cloudfront.net/user_3CN35dCKtHlDVKZnVwwQzE0vtcz/hf_20260918_183148_8263f067-5641-4fcc-b746-fae75bde3efb.png',
+  canteiro: 'https://d8j0ntlcm91z4.cloudfront.net/user_3CN35dCKtHlDVKZnVwwQzE0vtcz/hf_20260918_183149_488167ff-e263-4049-90f8-b3314d866e04.png',
+  marcenaria: 'https://d8j0ntlcm91z4.cloudfront.net/user_3CN35dCKtHlDVKZnVwwQzE0vtcz/hf_20260918_183149_5e302707-9c40-43cf-938e-6062c4c7c196.png',
+  cozinha: 'https://d8j0ntlcm91z4.cloudfront.net/user_3CN35dCKtHlDVKZnVwwQzE0vtcz/hf_20260918_183149_2799d377-3632-45cf-93af-baa7136a45ac.png',
+  familia: 'https://d8j0ntlcm91z4.cloudfront.net/user_3CN35dCKtHlDVKZnVwwQzE0vtcz/hf_20260918_183149_c9857071-7db6-4a63-bee4-b1f716fc2d81.png'
+};
+
+/* ============================ ESTADO ============================ */
+const A = {};   // respostas
+const isInt = () => ['interiores', 'ambos', 'naosei'].includes(A.escopo) || ['apto', 'reforma'].includes(A.momento);
+
+/* ============================ TELAS ============================ */
+const SCREENS = [
+  { id: 'intro', type: 'intro',
+    kicker: 'Diagnóstico rápido',
+    title: 'Em que ponto da decisão a sua obra está?',
+    lead: 'São dez perguntas e uns três minutos. No final, você sai com a ordem das decisões do seu projeto — casa, interiores, marcenaria — e com o que a gente faz em cada uma delas.',
+    cta: 'Começar' },
+
+  { id: 'momento', type: 'choice', q: true,
+    title: 'Onde está o seu projeto hoje?',
+    help: 'É daqui que a ordem das decisões começa.',
+    options: [
+      { id: 'lote',    label: 'Lote comprado, ainda sem projeto' },
+      { id: 'reforma', label: 'Casa para reformar ou ampliar' },
+      { id: 'apto',    label: 'Apartamento entregue, para fazer os interiores' },
+      { id: 'obra',    label: 'Obra já em andamento' },
+      { id: 'estudo',  label: 'Ainda estudando a possibilidade' }
+    ] },
+
+  { id: 'escopo', type: 'choice', q: true,
+    title: 'O que você precisa resolver?',
+    help: 'Interiores inclui layout, iluminação, revestimentos e marcenaria sob medida.',
+    options: [
+      { id: 'arquitetura', label: 'Projeto de arquitetura', sub: 'a casa: implantação, plantas, fachada, executivo' },
+      { id: 'interiores',  label: 'Projeto de interiores',  sub: 'os ambientes: layout, marcenaria, iluminação, acabamentos' },
+      { id: 'ambos',       label: 'Os dois, integrados',    sub: 'casa e interiores decididos na mesma sequência' },
+      { id: 'naosei',      label: 'Ainda não sei a diferença na prática' }
+    ],
+    ack: 'Anotado. Saber o que precisa resolver já é uma decisão — e é a que mais gente pula.' },
+
+  { id: 'win1', type: 'win',
+    kicker: 'Você já está à frente',
+    big: { value: 18, suffix: '%' },
+    text: 'É quanta gente, entre quem pensa em construir, chega a contratar um arquiteto ou engenheiro. Os outros 82% tocam a obra sem projeto — e é aí que as decisões passam a ser tomadas com a obra parada, esperando resposta.',
+    source: 'CAU/BR–Datafolha, 2022 (n = 2.495)',
+    close: 'Chegar até aqui já é decisão.',
+    img: 'canteiro',
+    cta: 'Avançar' },
+
+  { id: 'inicio', type: 'choice', q: true,
+    title: 'Quando você pretende começar?',
+    options: [
+      { id: 'ja',      label: 'Já comecei',            pts: 3 },
+      { id: '3m',      label: 'Nos próximos 3 meses',  pts: 3 },
+      { id: 'ano',     label: 'Ainda neste ano',       pts: 2 },
+      { id: 'semdata', label: 'Sem data definida',     pts: 1 }
+    ],
+    ack: 'Com data na mesa, a ordem das decisões muda. Anotado.' },
+
+  { id: 'area', type: 'slider', q: true,
+    title: 'Qual é a área aproximada?',
+    help: 'Do terreno, da casa ou do apartamento — o que você tiver à mão. É com esse número que a gente fala de investimento em R$/m², e não em porcentagem.',
+    min: 60, max: 600, step: 10, start: 200 },
+
+  { id: 'marcenaria', type: 'choice', q: true, show: isInt,
+    title: 'A marcenaria sob medida já está contratada?',
+    help: 'É a pergunta que mais muda a sequência de um projeto de interiores.',
+    options: [
+      { id: 'contratada', label: 'Já contratei',                 sub: 'projeto de fábrica fechado ou em produção' },
+      { id: 'orcando',    label: 'Já orcei, ainda não fechei' },
+      { id: 'naoainda',   label: 'Ainda não' },
+      { id: 'sem',        label: 'Não vou precisar de marcenaria sob medida' }
+    ],
+    ack: 'Essa resposta define em que momento a gente cruza a marcenaria com a elétrica.' },
+
+  { id: 'decisoes', type: 'multi', q: true,
+    title: 'O que você já escolheu?',
+    help: 'Marque tudo o que já está decidido — mesmo que, por enquanto, só na sua cabeça.',
+    options: [
+      { id: 'revest',  label: 'Pisos e revestimentos' },
+      { id: 'eletrica',label: 'Pontos elétricos e iluminação' },
+      { id: 'eletro',  label: 'Eletrodomésticos (geladeira, cooktop, forno)' },
+      { id: 'marc',    label: 'Layout da marcenaria' },
+      { id: 'louças',  label: 'Louças, metais e bancadas' },
+      { id: 'nenhuma', label: 'Nada ainda — é por isso que estou aqui', exclusive: true }
+    ],
+    cta: 'Avançar' },
+
+  { id: 'win2', type: 'win', personalized: 'marcenaria',
+    variants: {
+      contratada: { img: 'marcenaria', kicker: 'Dá tempo de compatibilizar', text: 'A inversão mais comum da região é medir a marcenaria antes de a casa estar decidida: o móvel chega e encontra a tomada no lugar errado, o ponto de água atrás do armário, a geladeira que não cabe no vão.', source: 'Método VisionOne · Fase 2 — Detalhamento e Compatibilização', close: 'O que fazemos: cruzar o projeto de fábrica com elétrica e hidráulica antes do corte. Errar no MDF custa o móvel inteiro.' },
+      orcando:    { img: 'marcenaria', kicker: 'Você está no momento certo', text: 'Orçamento de marcenaria feito sem projeto de interiores é orçamento que muda: pontos elétricos, eletrodomésticos e alinhamento com revestimentos ainda não existem no papel.', source: 'Método VisionOne · Fase 2 — Caderno executivo', close: 'No Método, a marcenaria é detalhada dentro do projeto. O marceneiro orça o que vai ser executado, não o que ele imaginou.' },
+      naoainda:   { img: 'marcenaria', kicker: 'Essa é a ordem certa', text: 'Projeto de interiores primeiro, marcenaria depois: é o que garante que armário, tomada, iluminação e eletrodoméstico se encontrem no papel, não dentro da parede.', source: 'Método VisionOne · Fase 2 — Detalhamento e Compatibilização', close: 'Quando chegar a hora de medir, piso e forro já estarão prontos — e o projeto de fábrica, compatibilizado.' },
+      sem:        { img: 'cozinha', kicker: 'Anotado', text: 'Sem marcenaria sob medida, o peso do projeto de interiores vai para layout, iluminação e revestimentos — as três decisões que mais mudam a rotina da casa.', source: 'Método VisionOne · Fase 2 — Estudo do Uso', close: 'É por aí que o Método começa: o uso, antes do acabamento.' },
+      default:    { img: 'cozinha', kicker: 'Dado para guardar', text: '84% de quem contratou arquiteto ou engenheiro ficou satisfeito com o resultado. O problema nunca foi o resultado — foi a decisão de contratar, travada pelo custo percebido.', source: 'CAU/BR–Datafolha, 2022', close: 'Por isso o investimento aparece aqui antes da conversa, em R$/m².' }
+    },
+    cta: 'Avançar' },
+
+  { id: 'dor', type: 'choice', q: true,
+    title: 'O que mais te preocupa nesse processo?',
+    options: [
+      { id: 'custo',     label: 'Não saber quanto vai custar' },
+      { id: 'estouro',   label: 'A obra atrasar ou estourar o orçamento' },
+      { id: 'rotina',    label: 'A casa pronta não funcionar para a rotina' },
+      { id: 'diferente', label: 'Ficar diferente do que vi no 3D' },
+      { id: 'decidir',   label: 'Não ter com quem decidir' }
+    ],
+    ack: 'Você acabou de nomear o problema. A maior parte das obras começa sem isso.' },
+
+  { id: 'falta', type: 'choice', q: true,
+    title: 'O que você mais sente falta — ou teme que falte — em quem contrata?',
+    help: 'É o que a gente mais ouve de quem chega na segunda obra — e já sabe o que custa improvisar.',
+    options: [
+      { id: 'numero',        label: 'Um número antes de decidir' },
+      { id: 'prazo',         label: 'Prazo e entregável por etapa' },
+      { id: 'resposta',      label: 'Alguém que responde — antes, durante e depois' },
+      { id: 'detalhamento',  label: 'Detalhamento executivo, não só o 3D bonito' },
+      { id: 'acompanhamento',label: 'Alguém na obra conferindo o que foi projetado' }
+    ],
+    ack: 'Isso vai direto para o seu plano.' },
+
+  { id: 'faixa', type: 'choice', q: true,
+    title: () => A.escopo === 'interiores' ? 'Qual é a faixa de investimento prevista para os interiores?' : 'Qual é a faixa de investimento prevista para a obra?',
+    help: 'Uma estimativa basta. É esse número que faz o projeto caber na realidade.',
+    options: () => A.escopo === 'interiores' ? CONFIG.FAIXAS_INTERIORES : CONFIG.FAIXAS_OBRA,
+    ack: 'Obrigado pela franqueza. É esse número que faz o projeto caber na realidade.' },
+
+  { id: 'contato', type: 'contact', q: true,
+    title: 'Como podemos te chamar — e por onde falamos?',
+    help: 'Quem lê a sua resposta é quem vai conduzir o projeto. Sem lista de disparo, sem robô.',
+    cta: 'Quero ver meu plano' },
+
+  { id: 'win3', type: 'win',
+    kicker: 'Antes do resultado',
+    text: () => `Você acabou de levantar, em três minutos, o que a primeira fase do Método levanta numa reunião: onde o projeto está, o escopo, ${A.marcenaria ? 'a situação da marcenaria, ' : ''}o que já foi decidido, o que preocupa e quanto cabe.`,
+    close: 'Agora dá para colocar tudo isso em ordem.',
+    img: 'familia',
+    cta: 'Ver o meu plano' },
+
+  { id: 'result', type: 'result' }
+];
+
+/* ============================ RENDER ============================ */
+let idx = 0;
+const stage = document.getElementById('stage'), bar = document.getElementById('bar'), stepLabel = document.getElementById('step-label');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const val = v => typeof v === 'function' ? v() : v;
+const visible = () => SCREENS.filter(s => !s.show || s.show());
+function h(str) { return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+const btnCls = 'inline-block bg-marrom hover:bg-marrom-hover text-offwhite px-7 py-[15px] text-[16px] font-medium rounded-marca transition-colors min-h-[48px] focus-visible:outline focus-visible:outline-[2.5px] focus-visible:outline-offset-[3px] focus-visible:outline-verde';
+const ghostCls = 'inline-block border border-marrom text-marrom hover:bg-bege px-7 py-[15px] text-[16px] font-medium rounded-marca transition-colors min-h-[48px] focus-visible:outline focus-visible:outline-[2.5px] focus-visible:outline-offset-[3px] focus-visible:outline-verde';
+const btn = (label, cls = btnCls) => `<button type="button" class="js-next ${cls}">${h(label)}</button>`;
+const kicker = t => `<p class="text-[11px] font-semibold tracking-[.16em] uppercase text-verde-texto mb-4">${h(t)}</p>`;
+const title  = t => `<h1 class="text-[28px] sm:text-[34px] leading-[1.14] tracking-[-.012em] font-normal max-w-[24ch] mb-3">${h(t)}</h1>`;
+const help   = t => t ? `<p class="text-[16px] leading-[1.55] text-verde-texto max-w-[52ch] mb-8">${h(t)}</p>` : '<div class="mb-8"></div>';
+const motif  = () => `<svg class="motif" viewBox="0 0 400 420" aria-hidden="true" focusable="false"><g fill="none" stroke="#7F7554" stroke-width="1.2"><path d="M60 400 L60 120 A140 140 0 0 1 200 -20"/><path d="M140 400 L140 200 A60 60 0 0 1 200 140"/><path d="M220 400 L220 260 A140 140 0 0 1 360 120"/></g></svg>`;
+const optBtn = (o, pressed) => `<button type="button" class="opt js-opt text-left w-full min-h-[56px] px-5 py-4 border border-marrom/30 rounded-marca transition-colors focus-visible:outline focus-visible:outline-[2.5px] focus-visible:outline-offset-[3px] focus-visible:outline-verde flex items-start gap-3" data-id="${h(o.id)}" data-pts="${o.pts ?? 0}" data-exclusive="${o.exclusive ? 1 : 0}" aria-pressed="${pressed ? 'true' : 'false'}">
+  <span class="check mt-[6px] w-3 h-3 border border-offwhite bg-offwhite/20 shrink-0" aria-hidden="true"></span>
+  <span><span class="block text-[17px] leading-snug">${h(o.label)}</span>${o.sub ? `<span class="sub block text-[14px] text-verde-texto mt-1">${h(o.sub)}</span>` : ''}</span></button>`;
+
+function render(s) {
+  switch (s.type) {
+    case 'intro': return `
+      ${kicker(s.kicker)}${title(s.title)}
+      <img src="${IMG.intro}" alt="Mesa de projeto com plantas impressas e amostras de madeira, pedra e tecido" class="w-full aspect-[16/9] object-cover rounded-marca my-8" loading="eager">
+      <p class="text-[18px] leading-[1.55] text-verde-texto max-w-[52ch] mb-10">${h(s.lead)}</p>
+      ${btn(s.cta)}
+      <p class="text-[14px] text-verde-texto mt-6">Suas respostas vão junto quando você falar com a gente. Ninguém vai te pedir tudo de novo.</p>`;
+
+    case 'choice': {
+      const opts = val(s.options);
+      return `
+      ${title(val(s.title))}${help(s.help)}
+      <div class="grid gap-3" role="group" aria-label="${h(val(s.title))}">${opts.map(o => optBtn(o, A[s.id] === o.id)).join('')}</div>
+      <p class="ack text-[15px] text-verde-texto mt-6 min-h-[24px]" aria-live="polite">${h(s.ack || '')}</p>`;
+    }
+
+    case 'multi': {
+      const sel = A[s.id] || [];
+      return `
+      ${title(val(s.title))}${help(s.help)}
+      <div class="grid gap-3" role="group" aria-label="${h(val(s.title))}">${s.options.map(o => optBtn(o, sel.includes(o.id))).join('')}</div>
+      <p id="multi-err" class="text-[14px] text-marrom mt-4 min-h-[20px]" aria-live="polite"></p>
+      <div class="mt-4">${btn(s.cta)}</div>`;
+    }
+
+    case 'slider': {
+      const v = A.area ?? s.start;
+      return `
+      ${title(s.title)}${help(s.help)}
+      <div class="border border-marrom/30 rounded-marca p-6 mb-8">
+        <div class="flex items-baseline gap-2 mb-6"><output id="area-out" class="text-[56px] sm:text-[64px] font-light leading-none tracking-[-.028em] tabular-nums">${v}</output><span class="text-[18px] text-verde-texto">m²</span></div>
+        <input id="area" type="range" min="${s.min}" max="${s.max}" step="${s.step}" value="${v}" aria-label="Área aproximada em metros quadrados">
+        <div class="flex justify-between text-[13px] text-verde-texto mt-3 tabular-nums"><span>${s.min} m²</span><span>${s.max} m²+</span></div>
+      </div>
+      <div class="flex flex-wrap gap-4 items-center">${btn('Avançar')}<button type="button" class="js-skip text-[15px] text-verde-texto underline min-h-[48px]">Ainda não sei a área</button></div>`;
+    }
+
+    case 'win': {
+      const v = s.personalized ? (s.variants[A[s.personalized]] || s.variants.default) : s;
+      return `
+      <div class="-mx-[8vw] sm:-mx-8 border border-marrom/15 rounded-marca overflow-hidden bg-offwhite">
+        ${(v.img || s.img) ? `<img src="${IMG[v.img || s.img]}" alt="" class="w-full aspect-[16/9] object-cover" loading="lazy">` : ''}
+        <div class="px-[8vw] sm:px-8 py-10 sm:py-12">
+          ${kicker(val(v.kicker) || val(s.kicker))}
+          ${s.big ? `<div class="flex items-baseline gap-1 mb-4"><span id="bignum" class="text-[72px] sm:text-[96px] font-light leading-none tracking-[-.028em] tabular-nums" data-to="${s.big.value}">0</span><span class="text-[32px] font-light">${h(s.big.suffix)}</span></div>` : ''}
+          <p class="text-[20px] sm:text-[22px] leading-[1.45] max-w-[40ch] mb-3">${h(val(v.text))}</p>
+          ${v.source ? `<p class="text-[13px] text-verde-texto mb-6">Fonte: ${h(v.source)}</p>` : '<div class="mb-6"></div>'}
+          <p class="text-[17px] font-medium max-w-[40ch] mb-8">${h(val(v.close))}</p>
+          ${btn(s.cta)}
+        </div>
+      </div>`;
+    }
+
+    case 'contact': return `
+      ${title(s.title)}${help(s.help)}
+      <form id="contact-form" class="grid gap-5 max-w-[440px]" novalidate>
+        <label class="grid gap-2"><span class="text-[13px] font-semibold tracking-[.08em] uppercase text-verde-texto">Nome</span>
+          <input id="nome" type="text" autocomplete="given-name" required minlength="2" value="${h(A.nome || '')}" class="min-h-[52px] px-4 bg-offwhite border border-marrom/40 rounded-marca text-[17px] focus:border-marrom focus-visible:outline focus-visible:outline-[2.5px] focus-visible:outline-offset-[3px] focus-visible:outline-verde" placeholder="Como podemos te chamar"></label>
+        <label class="grid gap-2"><span class="text-[13px] font-semibold tracking-[.08em] uppercase text-verde-texto">Melhor WhatsApp</span>
+          <input id="whats" type="tel" inputmode="tel" autocomplete="tel" required value="${h(A.whats || '')}" class="min-h-[52px] px-4 bg-offwhite border border-marrom/40 rounded-marca text-[17px] tabular-nums focus:border-marrom focus-visible:outline focus-visible:outline-[2.5px] focus-visible:outline-offset-[3px] focus-visible:outline-verde" placeholder="(17) 9 9999-9999"></label>
+        <p id="form-err" class="text-[14px] text-marrom min-h-[20px]" aria-live="polite"></p>
+        <div>${btn(s.cta)}</div>
+        <p class="text-[13px] text-verde-texto">Seus dados ficam com a equipe da Arq One, e só. Servem para conduzir a conversa.</p>
+      </form>`;
+
+    case 'result': return renderResult();
+  }
+}
+
+/* ============================ PLANO (resultado) ============================ */
+function labelOf(id, v) { const s = SCREENS.find(x => x.id === id); return val(s?.options)?.find(o => o.id === v)?.label || '—'; }
+function score() {
+  const ini = labelPts('inicio', A.inicio), fx = labelPts('faixa', A.faixa);
+  const t = ini + fx; return t >= CONFIG.QUENTE ? 'quente' : t >= CONFIG.MORNO ? 'morno' : 'frio';
+}
+function labelPts(id, v) { const s = SCREENS.find(x => x.id === id); return val(s?.options)?.find(o => o.id === v)?.pts ?? 0; }
+
+function buildPlan() {
+  const P = [];
+  const dec = A.decisoes || [];
+  const int = isInt() && A.marcenaria !== 'sem';
+  const add = (title, why, entrega) => P.push({ title, why, entrega });
+
+  if (A.momento === 'obra')
+    add('Diagnóstico da obra em curso', 'Separar o que já foi decidido do que ainda dá para decidir — antes de mais uma parede subir sem projeto.', 'Fase 1 · Entendimento + visita técnica · Fase 3 · Cronograma do que falta');
+
+  add(A.dor === 'custo' || A.falta === 'numero' ? 'O número antes da decisão' : 'Entendimento e faixa de investimento',
+      A.dor === 'custo' || A.falta === 'numero'
+        ? 'Você disse que precisa do número antes. É a nossa regra também: investimento estimado em R$/m², apresentado antes do fechamento do projeto.'
+        : 'Rotina, expectativas e faixa de investimento alinhadas na primeira conversa, para que desejo e orçamento nunca briguem lá na frente.',
+      'Fase 1 · Psicobriefing + Briefing de Rotina · Fase 2 · Memorial Estimativo Orçamentário e Matriz de Custo');
+
+  if (['lote', 'reforma'].includes(A.momento) || ['arquitetura', 'ambos'].includes(A.escopo))
+    add(A.momento === 'reforma' ? 'Leitura técnica da casa existente' : 'Leitura técnica do terreno',
+        'Recuos, taxa de ocupação, restrições da prefeitura e o que a estrutura existente permite — antecipado antes de virar surpresa no meio do caminho.',
+        'Fase 1 · Checklist VisionLand + consulta de restrições');
+
+  add(A.dor === 'rotina' ? 'A casa validada contra a sua rotina, antes do desenho' : 'Estudo do uso',
+      A.dor === 'rotina'
+        ? 'É a sua maior preocupação — e é o erro que nenhum acabamento conserta. Layout e fluxos validados com você antes de qualquer acabamento entrar em pauta.'
+        : 'Distribuição dos ambientes e fluxos validados contra a rotina real da família, para que o espaço funcione de verdade, não só pareça bonito.',
+      'Fase 2 · Croquis + layouts funcionais 2D + reunião de validação de rotina');
+
+  if (int) {
+    const m = {
+      contratada: ['Compatibilizar a marcenaria já contratada', 'Cruzar o projeto de fábrica com elétrica, hidráulica e eletrodomésticos antes do corte — a medição final só acontece com piso e forro prontos.'],
+      orcando:    ['Detalhar a marcenaria dentro do projeto, antes de fechar o orçamento', 'O marceneiro orça o desenho pronto, com pontos elétricos e eletrodomésticos já posicionados. O orçamento deixa de mudar.'],
+      naoainda:   ['Marcenaria, elétrica e eletrodomésticos decididos juntos', 'É a sequência que evita a tomada atrás do armário e a geladeira que não cabe no vão. A marcenaria entra no projeto, não depois dele.'],
+      default:    ['Interiores decididos na mesma sequência da casa', 'Layout, iluminação, revestimentos e marcenaria compatibilizados entre si e com a arquitetura.']
+    }[A.marcenaria] || (['Interiores decididos na mesma sequência da casa', 'Layout, iluminação, revestimentos e marcenaria compatibilizados entre si e com a arquitetura.']);
+    add(m[0], m[1], 'Fase 2 · Detalhamento e Compatibilização (Engineering) + caderno executivo');
+  } else if (!dec.includes('eletrica')) {
+    add('Pontos elétricos e iluminação definidos junto com o layout', 'Sem isso, a decisão migra para o dia em que o eletricista chega — e o canteiro decide por você.', 'Fase 2 · Compatibilização em BIM/CAD + caderno executivo');
+  }
+
+  if (A.dor === 'diferente' || A.falta === 'detalhamento')
+    add('Validar a estética na tela — e levar o detalhe para a obra', 'Cada ajuste feito no 3D é um erro que a obra não paga. O que vai para o canteiro é um caderno executivo, não um render e uma conversa.', 'Fase 2 · Visualização (Presence e Harmonize) + caderno executivo');
+
+  if (A.falta === 'prazo')
+    add('Cronograma com entregável por etapa', 'Você sabe qual é a próxima decisão e quando ela precisa estar tomada — do kick-off à entrega.', 'Fase 3 · Guia da Jornada + cronograma');
+
+  if (A.falta === 'acompanhamento' || A.dor === 'estouro' || A.momento === 'obra')
+    add('Acompanhamento de obra com relatório visual', 'Vistorias periódicas conferindo marcações, acabamentos e o que foi acordado — para que nada seja improvisado pela mão de obra.', 'Fase 3 · Vision Private + relatórios por WhatsApp · Fase 4 · As-built e checklist');
+
+  if (A.falta === 'resposta' || A.dor === 'decidir')
+    add('Um responsável só, do primeiro contato à entrega', 'Quem te atende é quem desenvolve o layout. E o projeto termina com reunião de entrega presencial e manual de uso — não com silêncio.', 'Fase 1 · Atendimento único · Fase 4 · Protocolo de Uso + kit de boas-vindas');
+
+  return P.slice(0, 6);
+}
+
+const FALTA_RESP = {
+  numero:         'Investimento estimado em R$/m² antes do fechamento — é regra da casa, não cortesia.',
+  prazo:          'Guia da Jornada e cronograma: cada fase com prazo e entregável nomeado.',
+  resposta:       'O responsável pelo atendimento é o mesmo que desenvolve o projeto, e a entrega termina em reunião presencial com manual de uso.',
+  detalhamento:   'Caderno executivo compatibilizado em BIM/CAD — o 3D é ferramenta de decisão, não o produto final.',
+  acompanhamento: 'Vistorias periódicas com relatório visual (Vision Private), as-built e checklist de qualidade na entrega.'
+};
+
+function waLink(t) { return `https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(t)}`; }
+
+function renderResult() {
+  const seg = score(), nome = (A.nome || '').split(' ')[0];
+  const plan = buildPlan();
+  const recap = [
+    ['Onde está', labelOf('momento', A.momento)],
+    ['Escopo', labelOf('escopo', A.escopo)],
+    ['Quando começa', labelOf('inicio', A.inicio)],
+    ['Área aproximada', A.area ? `${A.area} m²` : 'a definir'],
+    ...(A.marcenaria ? [['Marcenaria', labelOf('marcenaria', A.marcenaria)]] : []),
+    ['Já decidido', (A.decisoes || []).map(d => labelOf('decisoes', d)).join(', ') || '—'],
+    ['O que preocupa', labelOf('dor', A.dor)],
+    ['O que não pode faltar', labelOf('falta', A.falta)],
+    ['Faixa de investimento', labelOf('faixa', A.faixa)]
+  ];
+  const resumo = `Olá, sou ${A.nome || ''}. Fiz o diagnóstico no site da Arq One.\n` + recap.map(r => `• ${r[0]}: ${r[1]}`).join('\n') + `\n\nMeu plano (${plan.length} decisões): ` + plan.map((p, i) => `${i + 1}. ${p.title}`).join(' · ');
+  A.segmento = seg; A.plano = plan.map(p => p.title); sendWebhook();
+
+  const calcHref = `${CONFIG.CALCULADORA_URL}?${new URLSearchParams({ ...(A.area ? { area: A.area } : {}), escopo: A.escopo === 'naosei' ? 'ambos' : (A.escopo || 'arquitetura'), ...(A.marcenaria ? { marcenaria: A.marcenaria } : {}) })}`;
+  const SEG = {
+    quente: { text: 'Pelo momento e pela faixa que você informou, o próximo passo é a Sessão de Viabilidade: a primeira etapa do Método — entendimento, leitura do espaço e faixa de investimento na mesa. Não é reunião de venda; é o item 1 do seu plano.', primary: { label: 'Agendar conversa', href: waLink(resumo + '\n\nQuero agendar uma Sessão de Viabilidade.') } },
+    morno:  { text: 'Seu projeto está na janela certa para entender o processo antes de contratar. O Guia "Etapas VisionOne" mostra as quatro fases do Método com o entregável de cada uma — e este plano vai junto.', primary: { label: 'Receber o Guia Etapas VisionOne', href: waLink(resumo + '\n\nQuero receber o Guia Etapas VisionOne.') } },
+    frio:   { text: 'Sem data e sem número definidos, o que ajuda agora é guardar esta ordem. Quando a data chegar, você já sabe por onde começar — e com quem.', primary: { label: 'Conhecer o Método', href: CONFIG.METODO_URL } }
+  }[seg];
+
+  return `
+    ${kicker('Seu plano de decisões')}
+    ${title(`${nome ? nome + ', o' : 'O'} seu projeto tem ${plan.length} decisões abertas. Nesta ordem.`)}
+    <p class="text-[17px] leading-[1.55] text-verde-texto max-w-[52ch] mb-10">Não é um orçamento. É a sequência que evita decidir com a obra parada — e, em cada item, o que a gente entrega para isso não acontecer.</p>
+
+    <ol class="grid gap-0 border-t border-marrom/20 mb-12">
+      ${plan.map((p, i) => `
+      <li class="plan-item grid grid-cols-[40px_minmax(0,1fr)] gap-4 py-6 border-b border-marrom/20" style="animation-delay:${i * 120}ms">
+        <span class="text-[13px] font-semibold tracking-[.14em] text-marrom-medio tabular-nums pt-[6px]">0${i + 1}</span>
+        <div>
+          <h2 class="text-[20px] sm:text-[22px] font-medium leading-snug mb-2">${h(p.title)}</h2>
+          <p class="text-[16px] leading-[1.55] mb-3 max-w-[56ch]">${h(p.why)}</p>
+          <p class="text-[13px] font-semibold tracking-[.06em] uppercase text-verde-texto">O que entregamos · ${h(p.entrega)}</p>
+        </div>
+      </li>`).join('')}
+    </ol>
+
+    <div class="-mx-[8vw] sm:-mx-8 border border-marrom/15 rounded-marca overflow-hidden bg-offwhite mb-12">
+      <img src="${IMG.familia}" alt="" class="w-full aspect-[16/9] object-cover" loading="lazy">
+      <div class="px-[8vw] sm:px-8 py-10">
+        ${kicker('Você disse que não pode faltar')}
+        <p class="text-[20px] leading-snug mb-3 max-w-[40ch]">${h(labelOf('falta', A.falta))}</p>
+        <p class="text-[16px] leading-[1.55] max-w-[52ch]"><span class="font-medium">Como respondemos:</span> ${h(FALTA_RESP[A.falta] || FALTA_RESP.numero)}</p>
+      </div>
+    </div>
+
+    ${kicker('Próximo passo')}
+    <p class="text-[17px] leading-[1.55] max-w-[52ch] mb-8">${h(SEG.text)}</p>
+    <div class="flex flex-wrap gap-4 mb-10">
+      <a href="${SEG.primary.href}" class="${btnCls}" ${SEG.primary.href.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}>${h(SEG.primary.label)}</a>
+      <a href="${calcHref}" class="${ghostCls}">Ver o investimento estimado</a>
+    </div>
+
+    <details class="border-t border-b border-marrom/20 py-4 mb-8">
+      <summary class="cursor-pointer text-[15px] font-medium min-h-[40px] flex items-center justify-between"><span>Suas respostas</span><span class="text-verde-texto" aria-hidden="true">+</span></summary>
+      <dl class="grid gap-0 mt-3 max-w-[520px]">${recap.map(r => `<div class="grid grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-4 py-3 border-t border-marrom/10"><dt class="text-[12px] font-semibold tracking-[.08em] uppercase text-verde-texto pt-[3px]">${h(r[0])}</dt><dd class="text-[15px]">${h(r[1])}</dd></div>`).join('')}</dl>
+    </details>
+    <p class="text-[15px] text-verde-texto max-w-[52ch]">Quem lê é quem conduz o projeto. A Arq One não vende projeto — vende previsibilidade.</p>`;
+}
+
+function sendWebhook() {
+  if (!CONFIG.WEBHOOK_URL) return;
+  try { fetch(CONFIG.WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true, body: JSON.stringify({ origem: 'quiz-arqone', enviado_em: new Date().toISOString(), ...A }) }); } catch (e) {}
+}
+
+/* ============================ NAVEGAÇÃO ============================ */
+function updateChrome() {
+  const vis = visible(), s = SCREENS[idx], pos = vis.indexOf(s);
+  const pct = Math.round((pos / (vis.length - 1)) * 100);
+  bar.style.width = pct + '%'; bar.setAttribute('aria-valuenow', pct);
+  const qs = vis.filter(x => x.q), qn = qs.indexOf(s);
+  stepLabel.textContent = qn >= 0 ? `Pergunta ${qn + 1} de ${qs.length}` : (s.type === 'result' ? 'Seu plano' : '');
+}
+function mount() {
+  const s = SCREENS[idx];
+  const el = document.createElement('section');
+  el.className = 'screen' + (s.type === 'win' ? ' win' : '') + (reduceMotion ? '' : ' enter');
+  el.innerHTML = render(s);
+  stage.replaceChildren(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove('enter')));
+  updateChrome(); wire(el, s);
+  const f = el.querySelector('h1'); if (f) { f.setAttribute('tabindex', '-1'); f.focus({ preventScroll: true }); }
+  window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+}
+function next() {
+  const cur = stage.firstElementChild;
+  let n = idx + 1;
+  while (n < SCREENS.length && SCREENS[n].show && !SCREENS[n].show()) n++;
+  if (!cur || n >= SCREENS.length) return;
+  idx = n;
+  if (reduceMotion) return mount();
+  cur.classList.add('leave'); setTimeout(mount, 230);
+}
+function countUp(el) {
+  const to = Number(el.dataset.to);
+  if (reduceMotion) { el.textContent = to; return; }
+  const t0 = performance.now(), dur = 900;
+  (function tick(now) { const p = Math.min(1, (now - t0) / dur); el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); })(t0);
+}
+function wire(el, s) {
+  el.querySelectorAll('.js-next').forEach(b => b.addEventListener('click', () => {
+    if (s.type === 'slider') A.area = Number(el.querySelector('#area').value);
+    if (s.type === 'contact') return submitContact(el);
+    if (s.type === 'multi') { if (!(A[s.id] || []).length) { el.querySelector('#multi-err').textContent = 'Marque pelo menos uma opção — "nada ainda" também conta.'; return; } }
+    next();
+  }));
+  el.querySelector('.js-skip')?.addEventListener('click', () => { A.area = null; next(); });
+
+  if (s.type === 'choice') {
+    let locked = false;
+    el.querySelectorAll('.js-opt').forEach(o => o.addEventListener('click', () => {
+      if (locked) return; locked = true;
+      el.querySelectorAll('.js-opt').forEach(x => x.setAttribute('aria-pressed', 'false'));
+      o.setAttribute('aria-pressed', 'true'); A[s.id] = o.dataset.id;
+      const ack = el.querySelector('.ack');
+      if (s.ack && ack) { ack.classList.add('show'); setTimeout(next, 1100); } else setTimeout(next, 320);
+    }));
+  }
+  if (s.type === 'multi') {
+    el.querySelectorAll('.js-opt').forEach(o => o.addEventListener('click', () => {
+      const id = o.dataset.id, ex = o.dataset.exclusive === '1';
+      let sel = A[s.id] || [];
+      if (sel.includes(id)) sel = sel.filter(x => x !== id);
+      else if (ex) sel = [id];
+      else sel = [...sel.filter(x => !s.options.find(op => op.id === x)?.exclusive), id];
+      A[s.id] = sel; el.querySelector('#multi-err').textContent = '';
+      el.querySelectorAll('.js-opt').forEach(x => x.setAttribute('aria-pressed', sel.includes(x.dataset.id) ? 'true' : 'false'));
+    }));
+  }
+  if (s.type === 'slider') { const r = el.querySelector('#area'), out = el.querySelector('#area-out'); r.addEventListener('input', () => out.textContent = Number(r.value) >= s.max ? `${s.max}+` : r.value); }
+  if (s.type === 'win') { const big = el.querySelector('#bignum'); if (big) setTimeout(() => countUp(big), 250); }
+  if (s.type === 'contact') el.querySelector('#contact-form').addEventListener('submit', e => { e.preventDefault(); submitContact(el); });
+}
+function submitContact(el) {
+  const nome = el.querySelector('#nome').value.trim(), whats = el.querySelector('#whats').value.replace(/\D/g, ''), err = el.querySelector('#form-err');
+  if (nome.length < 2) { err.textContent = 'Precisamos de um nome para conduzir a conversa.'; el.querySelector('#nome').focus(); return; }
+  if (whats.length < 10 || whats.length > 13) { err.textContent = 'Confira o WhatsApp — com DDD, por favor.'; el.querySelector('#whats').focus(); return; }
+  A.nome = nome; A.whats = whats; err.textContent = ''; next();
+}
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const s = SCREENS[idx];
+  if (['intro', 'win', 'slider', 'multi'].includes(s.type)) { e.preventDefault(); stage.querySelector('.js-next')?.click(); }
+});
+mount();
+</script>
+</body>
+</html>
