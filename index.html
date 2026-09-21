@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Em que ponto da decisão a sua obra está? | Arq One</title>
-<meta name="description" content="Dez perguntas, cerca de três minutos. No final, você recebe a ordem das decisões do seu projeto (arquitetura, interiores e marcenaria) e o que a Arq One entrega em cada uma.">
+<title>Qual o próximo passo do seu projeto? · Diagnóstico Arq One</title>
+<meta name="description" content="Dez perguntas, três minutos. Receba a ordem das suas próximas decisões, o que a Arq One faz em cada uma e o caminho para saber quanto o projeto custa.">
 <!--
   QUIZ DE QUALIFICAÇÃO · Arq One · v3 (copy revisada: tom de voz, resposta direta, oferta nomeada)
   Identidade visual OFICIAL (Manual de Marca v2). Uma pergunta por tela, ramificação por escopo
@@ -121,39 +121,39 @@ const isInt = () => ['interiores', 'ambos', 'naosei'].includes(A.escopo) || ['ap
 const SCREENS = [
   { id: 'intro', type: 'intro',
     kicker: 'Diagnóstico gratuito · 3 minutos',
-    title: 'Em que ponto da decisão a sua obra está?',
-    lead: 'Dez perguntas. No final, você recebe a ordem das decisões do seu projeto (casa, interiores e marcenaria), o que a Arq One entrega em cada uma e o caminho para a estimativa de investimento em R$/m².',
-    who: 'Feito para quem vai construir, reformar ou fazer os interiores de um imóvel de médio ou alto padrão em Rio Preto e região.',
-    cta: 'Começar o diagnóstico' },
+    title: 'Qual o próximo passo do seu projeto?',
+    lead: 'Dez perguntas. No final, você recebe a ordem das suas próximas decisões, o que a Arq One faz em cada uma e o caminho para saber quanto o projeto custa.',
+    who: 'Para quem vai construir, reformar ou fazer os interiores de uma casa ou apartamento de médio e alto padrão em Rio Preto e região.',
+    cta: 'Começar' },
 
   { id: 'momento', type: 'choice', q: true,
     title: 'Onde está o seu projeto hoje?',
-    help: 'A ordem das decisões começa por aqui.',
+    help: 'É por aqui que a ordem das decisões começa.',
     options: [
-      { id: 'lote',    label: 'Lote comprado, ainda sem projeto' },
+      { id: 'lote',    label: 'Terreno comprado, ainda sem projeto' },
       { id: 'reforma', label: 'Casa para reformar ou ampliar' },
       { id: 'apto',    label: 'Apartamento entregue, para fazer os interiores' },
       { id: 'obra',    label: 'Obra já em andamento' },
-      { id: 'estudo',  label: 'Ainda estudando a possibilidade' }
+      { id: 'estudo',  label: 'Ainda estudando a ideia' }
     ] },
 
   { id: 'escopo', type: 'choice', q: true,
     title: 'O que você precisa resolver?',
-    help: 'Interiores inclui layout, iluminação, revestimentos e marcenaria sob medida.',
+    help: 'Interiores é tudo o que fica por dentro: onde cada coisa fica, iluminação, pisos e móveis sob medida.',
     options: [
-      { id: 'arquitetura', label: 'Projeto de arquitetura', sub: 'a casa: implantação, plantas, fachada, executivo' },
-      { id: 'interiores',  label: 'Projeto de interiores',  sub: 'os ambientes: layout, marcenaria, iluminação, acabamentos' },
-      { id: 'ambos',       label: 'Os dois, integrados',    sub: 'casa e interiores decididos na mesma sequência' },
+      { id: 'arquitetura', label: 'Projeto da casa',       sub: 'a casa em si: onde ela fica no terreno, plantas, fachada, tudo pronto para construir' },
+      { id: 'interiores',  label: 'Projeto de interiores', sub: 'os ambientes: layout, móveis, iluminação, acabamentos' },
+      { id: 'ambos',       label: 'Os dois, juntos',       sub: 'casa e interiores decididos na mesma ordem' },
       { id: 'naosei',      label: 'Ainda não sei a diferença na prática' }
     ],
     ack: 'Saber o que precisa resolver já é uma decisão. É a que mais gente pula.' },
 
   { id: 'win1', type: 'win',
-    kicker: 'Você já está à frente',
+    kicker: 'Parabéns!',
     big: { value: 18, suffix: '%' },
-    text: 'É quanta gente, entre quem pensa em construir, chega a contratar um arquiteto ou engenheiro. Os outros 82% tocam a obra sem projeto. É nesse grupo que as decisões passam a ser tomadas com a obra parada, esperando resposta.',
-    source: 'CAU/BR e Datafolha, 2022 (n = 2.495)',
-    close: 'Chegar até aqui já é decisão.',
+    text: 'Você já está entre a minoria de quem pensa em construir ou reformar e chega a contratar um arquiteto. As outras tocam a obra sem projeto, e é aí que as decisões passam a ser tomadas no susto, com a obra parada esperando resposta.',
+    source: 'CAU/BR e Datafolha, 2022',
+    close: 'Chegar até aqui já é uma decisão que te põe à frente de 82%.',
     img: 'canteiro',
     cta: 'Avançar' },
 
@@ -168,29 +168,29 @@ const SCREENS = [
     ack: 'Com data na mesa, a ordem das decisões muda.' },
 
   { id: 'area', type: 'slider', q: true,
-    title: 'Qual é a área aproximada?',
-    help: 'Do terreno, da casa ou do apartamento, o que você tiver à mão. É com esse número que a gente fala de investimento em R$/m², e não em porcentagem.',
+    title: 'Qual é o tamanho aproximado?',
+    help: 'Do terreno, da casa ou do apartamento, o que você tiver à mão. Não precisa ser exato: é com esse número que a gente te passa uma estimativa nos próximos minutos.',
     min: 60, max: 600, step: 10, start: 200 },
 
   { id: 'marcenaria', type: 'choice', q: true, show: isInt,
-    title: 'A marcenaria sob medida já está contratada?',
-    help: 'É a pergunta que mais muda a sequência de um projeto de interiores.',
+    title: 'Os móveis sob medida já estão contratados?',
+    help: 'É a pergunta que mais muda a ordem de um projeto de interiores.',
     options: [
-      { id: 'contratada', label: 'Já contratei',                 sub: 'projeto de fábrica fechado ou em produção' },
-      { id: 'orcando',    label: 'Já orcei, ainda não fechei' },
+      { id: 'contratada', label: 'Já contratei',                          sub: 'o marceneiro já tem o desenho ou já está produzindo' },
+      { id: 'orcando',    label: 'Já pedi orçamento, ainda não fechei' },
       { id: 'naoainda',   label: 'Ainda não' },
-      { id: 'sem',        label: 'Não vou precisar de marcenaria sob medida' }
+      { id: 'sem',        label: 'Não vou precisar de móveis sob medida' }
     ],
-    ack: 'Essa resposta define em que momento a gente cruza a marcenaria com a elétrica.' },
+    ack: 'Essa resposta define em que momento a gente cruza o móvel com a tomada.' },
 
   { id: 'decisoes', type: 'multi', q: true,
     title: 'O que você já escolheu?',
-    help: 'Marque tudo o que já está decidido, mesmo que por enquanto só na sua cabeça.',
+    help: 'Marque tudo o que já está decidido, mesmo que só na sua cabeça.',
     options: [
       { id: 'revest',  label: 'Pisos e revestimentos' },
-      { id: 'eletrica',label: 'Pontos elétricos e iluminação' },
+      { id: 'eletrica',label: 'Tomadas e iluminação' },
       { id: 'eletro',  label: 'Eletrodomésticos (geladeira, cooktop, forno)' },
-      { id: 'marc',    label: 'Layout da marcenaria' },
+      { id: 'marc',    label: 'Layout dos móveis' },
       { id: 'louças',  label: 'Louças, metais e bancadas' },
       { id: 'nenhuma', label: 'Nada ainda. É por isso que estou aqui', exclusive: true }
     ],
@@ -198,39 +198,39 @@ const SCREENS = [
 
   { id: 'win2', type: 'win', personalized: 'marcenaria',
     variants: {
-      contratada: { img: 'marcenaria', kicker: 'Ainda dá tempo de conferir', text: 'A inversão mais comum da região é medir a marcenaria antes de a casa estar decidida. O móvel chega e encontra a tomada no lugar errado, o ponto de água atrás do armário, a geladeira que não cabe no vão.', source: 'Método VisionOne · Fase 2, detalhamento e compatibilização', close: 'O que fazemos no seu caso: cruzar o projeto de fábrica com elétrica e hidráulica antes do corte. Errar no MDF custa o móvel inteiro.' },
-      orcando:    { img: 'marcenaria', kicker: 'Você está no momento certo', text: 'Orçamento de marcenaria feito sem projeto de interiores é orçamento que muda. Pontos elétricos, eletrodomésticos e alinhamento com revestimentos ainda não existem no papel.', source: 'Método VisionOne · Fase 2, caderno executivo', close: 'No Método, a marcenaria é detalhada dentro do projeto. O marceneiro orça o que vai ser executado, e o valor para de mudar.' },
-      naoainda:   { img: 'marcenaria', kicker: 'Essa é a ordem certa', text: 'Projeto de interiores primeiro, marcenaria depois. É o que garante que armário, tomada, iluminação e eletrodoméstico se encontrem no papel, e não dentro da parede.', source: 'Método VisionOne · Fase 2, detalhamento e compatibilização', close: 'Quando chegar a hora de medir, piso e forro já estarão prontos e o projeto de fábrica, conferido.' },
-      sem:        { img: 'cozinha', kicker: 'Anotado', text: 'Sem marcenaria sob medida, o peso do projeto de interiores vai para layout, iluminação e revestimentos: as três decisões que mais mudam a rotina da casa.', source: 'Método VisionOne · Fase 2, estudo do uso', close: 'É por aí que o Método começa. Primeiro o uso, depois o acabamento.' },
-      default:    { img: 'cozinha', kicker: 'Um dado para guardar', text: 'Entre quem contratou arquiteto ou engenheiro, 84% aprovam o resultado. O que trava a maioria das pessoas antes de contratar é o custo percebido, e não o resultado.', source: 'CAU/BR e Datafolha, 2022', close: 'Por isso o investimento aparece aqui antes da conversa, em R$/m².' }
+      contratada: { img: 'marcenaria', kicker: 'Ainda dá tempo de conferir', text: 'A inversão mais comum da região é medir o móvel antes de a casa estar decidida. O armário chega e encontra a tomada no lugar errado, o ponto de água atrás da porta, a geladeira que não cabe no vão.', close: 'No seu caso, o que fazemos é cruzar o desenho do marceneiro com a elétrica e a hidráulica antes de a madeira ser cortada. Errar na tela custa zero. Errar na madeira custa o móvel inteiro.' },
+      orcando:    { img: 'marcenaria', kicker: 'Você está no momento certo', text: 'Orçamento de marcenaria feito sem projeto de interiores é orçamento que muda. As tomadas, os eletrodomésticos e o alinhamento com o piso ainda não existem no papel.', close: 'No Método, o móvel é desenhado dentro do projeto. O marceneiro orça o que vai ser feito, e o valor para de mudar.' },
+      naoainda:   { img: 'marcenaria', kicker: 'Essa é a ordem certa', text: 'Projeto de interiores primeiro, marcenaria depois. É o que garante que armário, tomada, luz e eletrodoméstico se encontrem no papel, e não dentro da parede.', close: 'Quando chegar a hora de medir, piso e forro já estarão prontos e o desenho do móvel, conferido.' },
+      sem:        { img: 'cozinha', kicker: 'Anotado', text: 'Sem móveis sob medida, o peso do projeto de interiores vai para o layout, a iluminação e os revestimentos: as três decisões que mais mudam a rotina da casa.', close: 'É por aí que o Método começa. Primeiro como você vive, depois o acabamento.' },
+      default:    { img: 'cozinha', kicker: 'Um dado para guardar', text: 'Entre quem contratou arquiteto ou engenheiro, 84% ficaram satisfeitos com o resultado. O que trava a maioria antes de contratar é o medo do custo, e não o resultado.', source: 'CAU/BR e Datafolha, 2022', close: 'Por isso, aqui, quanto custa aparece antes da conversa.' }
     },
     cta: 'Avançar' },
 
   { id: 'dor', type: 'choice', q: true,
-    title: 'O que mais te preocupa nesse processo?',
+    title: 'O que mais te preocupa nesse projeto?',
     options: [
       { id: 'custo',     label: 'Não saber quanto vai custar' },
       { id: 'estouro',   label: 'A obra atrasar ou estourar o orçamento' },
-      { id: 'rotina',    label: 'A casa pronta não funcionar para a rotina' },
-      { id: 'diferente', label: 'Ficar diferente do que vi no 3D' },
+      { id: 'rotina',    label: 'A casa pronta não funcionar para o dia a dia' },
+      { id: 'diferente', label: 'Ficar diferente do que vi na tela' },
       { id: 'decidir',   label: 'Não ter com quem decidir' }
     ],
-    ack: 'Você acabou de nomear o problema. A maior parte das obras começa sem isso.' },
+    ack: 'A maior parte das obras começa sem isso, mas com você vai ser diferente.' },
 
   { id: 'falta', type: 'choice', q: true,
     title: 'O que não pode faltar em quem você contratar?',
     help: 'É o que a gente mais ouve de quem chega na segunda obra e já sabe o que custa improvisar.',
     options: [
-      { id: 'numero',        label: 'Um número antes de decidir' },
-      { id: 'prazo',         label: 'Prazo e entregável por etapa' },
-      { id: 'resposta',      label: 'Alguém que responde antes, durante e depois' },
-      { id: 'detalhamento',  label: 'Detalhamento executivo, não só o 3D bonito' },
-      { id: 'acompanhamento',label: 'Alguém na obra conferindo o que foi projetado' }
+      { id: 'numero',        label: 'Um número claro antes de decidir' },
+      { id: 'prazo',         label: 'Prazo e entrega clara em cada etapa' },
+      { id: 'resposta',      label: 'Alguém que me dê suporte durante todo o processo' },
+      { id: 'detalhamento',  label: 'O desenho completo do projeto, não só a imagem bonita' },
+      { id: 'acompanhamento',label: 'Alguém na obra conferindo o que foi combinado' }
     ],
     ack: 'Isso vai direto para o seu plano.' },
 
   { id: 'faixa', type: 'choice', q: true,
-    title: () => A.escopo === 'interiores' ? 'Qual é a faixa de investimento prevista para os interiores?' : 'Qual é a faixa de investimento prevista para a obra?',
+    title: () => A.escopo === 'interiores' ? 'Quanto você pretende investir nos interiores?' : 'Quanto você pretende investir na obra?',
     help: 'Uma estimativa basta. É esse número que faz o projeto caber na realidade.',
     options: () => A.escopo === 'interiores' ? CONFIG.FAIXAS_INTERIORES : CONFIG.FAIXAS_OBRA,
     ack: 'Obrigado pela franqueza. Aqui a gente fala de investimento antes do desenho.' },
@@ -242,7 +242,7 @@ const SCREENS = [
 
   { id: 'win3', type: 'win',
     kicker: 'Antes do resultado',
-    text: () => `Você acabou de levantar, em três minutos, o que a primeira fase do Método levanta numa reunião: onde o projeto está, o escopo, ${A.marcenaria ? 'a situação da marcenaria, ' : ''}o que já foi decidido, o que preocupa e quanto cabe.`,
+    text: () => `Você acabou de levantar, em três minutos, o que a primeira conversa do Método levanta numa reunião: onde o projeto está, o que precisa resolver, ${A.marcenaria ? 'a situação dos móveis, ' : ''}o que já foi decidido, o que preocupa e quanto cabe.`,
     close: 'Agora dá para colocar tudo isso em ordem.',
     img: 'familia',
     cta: 'Ver o meu plano' },
@@ -355,58 +355,58 @@ function buildPlan() {
   const add = (title, why, entrega) => P.push({ title, why, entrega });
 
   if (A.momento === 'obra')
-    add('Diagnóstico da obra em curso', 'Separar o que já foi decidido do que ainda dá para decidir, antes de mais uma parede subir sem projeto.', 'Fase 1 · Entendimento e visita técnica · Fase 3 · Cronograma do que falta');
+    add('Entender a obra em curso', 'Separar o que já foi decidido do que ainda dá para decidir, antes de mais uma parede subir sem projeto.', 'visita técnica e uma conversa de entendimento; cronograma do que falta');
 
-  add(A.dor === 'custo' || A.falta === 'numero' ? 'O número antes da decisão' : 'Entendimento e faixa de investimento',
+  add(A.dor === 'custo' || A.falta === 'numero' ? 'O número antes da decisão' : 'Entender a família e o quanto cabe',
       A.dor === 'custo' || A.falta === 'numero'
-        ? 'Você disse que precisa do número antes. Aqui funciona assim: investimento estimado em R$/m², apresentado antes do fechamento do projeto.'
-        : 'Rotina, expectativas e faixa de investimento alinhadas na primeira conversa, para que desejo e orçamento não briguem lá na frente.',
-      'Fase 1 · Psicobriefing e briefing de rotina · Fase 2 · Memorial estimativo e matriz de custo');
+        ? 'Você disse que precisa do número antes. Aqui funciona assim: quanto vai custar, por metro quadrado, aparece antes de você assinar o projeto.'
+        : 'Como vocês vivem, o que esperam e quanto pretendem investir, alinhados na primeira conversa, para que desejo e dinheiro não briguem lá na frente.',
+      A.dor === 'custo' || A.falta === 'numero' ? 'conversa de entendimento; estimativa de investimento antes do fechamento' : 'conversa de entendimento; estimativa de investimento');
 
   if (['lote', 'reforma'].includes(A.momento) || ['arquitetura', 'ambos'].includes(A.escopo))
-    add(A.momento === 'reforma' ? 'Leitura técnica da casa existente' : 'Leitura técnica do terreno',
-        'Recuos, taxa de ocupação, restrições da prefeitura e o que a estrutura existente permite, levantados antes de virarem surpresa no meio do caminho.',
-        'Fase 1 · Checklist VisionLand e consulta de restrições');
+    add(A.momento === 'reforma' ? 'Ler a casa que já existe' : 'Ler o terreno',
+        'O que a prefeitura permite, onde a casa pode ficar, o que a estrutura aguenta. Tudo levantado antes de virar surpresa no meio do caminho.',
+        'leitura técnica do terreno e consulta às regras da prefeitura');
 
-  add(A.dor === 'rotina' ? 'A casa validada contra a sua rotina, antes do desenho' : 'Estudo do uso',
+  add(A.dor === 'rotina' ? 'A casa testada contra a sua rotina, antes do desenho' : 'O uso antes do desenho',
       A.dor === 'rotina'
-        ? 'É a sua maior preocupação, e é o erro que nenhum acabamento conserta. Layout e fluxos validados com você antes de qualquer acabamento entrar em pauta.'
-        : 'Distribuição dos ambientes e fluxos validados contra a rotina real da família, para que o espaço funcione no dia a dia, e não só na foto.',
-      'Fase 2 · Croquis, layouts funcionais e reunião de validação de rotina');
+        ? 'É a sua maior preocupação, e é o erro que nenhum acabamento conserta. Onde cada ambiente fica e como vocês circulam, validado com você antes de qualquer acabamento entrar em pauta.'
+        : 'Onde cada ambiente fica e como a família circula, validado contra o dia a dia de verdade, para que a casa funcione no uso, e não só na foto.',
+      'estudo de layout e reunião de validação com a família');
 
   if (int) {
     const m = {
-      contratada: ['Conferir a marcenaria já contratada', 'Cruzar o projeto de fábrica com elétrica, hidráulica e eletrodomésticos antes do corte. A medição final só acontece com piso e forro prontos.'],
-      orcando:    ['Detalhar a marcenaria dentro do projeto, antes de fechar o orçamento', 'O marceneiro orça o desenho pronto, com pontos elétricos e eletrodomésticos já posicionados. O orçamento para de mudar.'],
-      naoainda:   ['Marcenaria, elétrica e eletrodomésticos decididos juntos', 'É a sequência que evita a tomada atrás do armário e a geladeira que não cabe no vão. A marcenaria entra no projeto, e não depois dele.'],
-      default:    ['Interiores decididos na mesma sequência da casa', 'Layout, iluminação, revestimentos e marcenaria compatibilizados entre si e com a arquitetura.']
-    }[A.marcenaria] || (['Interiores decididos na mesma sequência da casa', 'Layout, iluminação, revestimentos e marcenaria compatibilizados entre si e com a arquitetura.']);
-    add(m[0], m[1], 'Fase 2 · Detalhamento e compatibilização, com caderno executivo');
+      contratada: ['Conferir o móvel já contratado', 'Cruzar o desenho do marceneiro com elétrica, hidráulica e eletrodomésticos antes de a madeira ser cortada. A medição final só acontece com piso e forro prontos.'],
+      orcando:    ['Desenhar o móvel dentro do projeto, antes de fechar o orçamento', 'O marceneiro orça o desenho pronto, com tomadas e eletrodomésticos já no lugar. O orçamento para de mudar.'],
+      naoainda:   ['Móveis, tomadas e eletrodomésticos decididos juntos', 'É a sequência que evita a tomada atrás do armário e a geladeira que não cabe no vão. O móvel entra no projeto, e não depois dele.'],
+      default:    ['Interiores decididos na mesma ordem da casa', 'Layout, iluminação, revestimentos e móveis conferidos entre si e com a casa.']
+    }[A.marcenaria] || (['Interiores decididos na mesma ordem da casa', 'Layout, iluminação, revestimentos e móveis conferidos entre si e com a casa.']);
+    add(m[0], m[1], 'projeto de interiores detalhado, com o móvel conferido antes do corte');
   } else if (!dec.includes('eletrica')) {
-    add('Pontos elétricos e iluminação definidos junto com o layout', 'Sem isso, a decisão migra para o dia em que o eletricista chega, e o canteiro decide por você.', 'Fase 2 · Compatibilização em BIM/CAD e caderno executivo');
+    add('Tomadas e iluminação definidas junto com o layout', 'Sem isso, a decisão vai parar no dia em que o eletricista chega, e a obra decide por você.', 'elétrica, hidráulica e estrutura conferidas juntas no desenho');
   }
 
   if (A.dor === 'diferente' || A.falta === 'detalhamento')
-    add('Validar a estética na tela e levar o detalhe para a obra', 'Cada ajuste feito no 3D é um erro que a obra não paga. O que vai para o canteiro é um caderno executivo, e não um render com uma conversa.', 'Fase 2 · Visualização 3D e caderno executivo');
+    add('Ver a casa pronta na tela e levar o detalhe para a obra', 'Cada ajuste feito na tela é um erro que a obra não paga. O que vai para o canteiro é o desenho completo, e não uma imagem bonita e uma conversa.', 'visualização em 3D e desenho completo da obra');
 
   if (A.falta === 'prazo')
-    add('Cronograma com entregável por etapa', 'Você sabe qual é a próxima decisão e quando ela precisa estar tomada, do kick-off à entrega.', 'Fase 3 · Guia da Jornada e cronograma');
+    add('Cronograma com entrega clara por etapa', 'Você sabe qual é a próxima decisão e quando ela precisa estar tomada, do começo à entrega.', 'cronograma e guia de etapas');
 
   if (A.falta === 'acompanhamento' || A.dor === 'estouro' || A.momento === 'obra')
-    add('Acompanhamento de obra com relatório visual', 'Vistorias periódicas conferindo marcações, acabamentos e o que foi acordado, para que nada seja improvisado pela mão de obra.', 'Fase 3 · Vistorias com relatório pelo WhatsApp · Fase 4 · As-built e checklist');
+    add('Acompanhamento de obra com relatório', 'Visitas periódicas conferindo o que foi combinado, para que nada seja improvisado no canteiro.', 'vistorias com relatório pelo WhatsApp; conferência item por item na entrega');
 
   if (A.falta === 'resposta' || A.dor === 'decidir')
-    add('Um responsável só, do primeiro contato à entrega', 'Quem te atende é quem desenvolve o projeto. E o projeto termina com reunião de entrega e manual de uso, e não com silêncio.', 'Fase 1 · Atendimento único · Fase 4 · Entrega formal e manual de uso');
+    add('Um responsável só, do primeiro contato à entrega', 'Quem te atende é quem desenha o projeto. E o projeto termina com reunião de entrega e manual de uso da casa, e não com silêncio.', 'atendimento único; entrega formal com manual de uso');
 
   return P.slice(0, 6);
 }
 
 const FALTA_RESP = {
-  numero:         'Investimento estimado em R$/m² antes do fechamento. É regra da casa.',
-  prazo:          'Guia da Jornada e cronograma: cada fase com prazo e entregável nomeado.',
-  resposta:       'Quem te atende é quem desenvolve o projeto, e a entrega termina em reunião presencial com manual de uso.',
-  detalhamento:   'Caderno executivo compatibilizado em BIM/CAD. O 3D é ferramenta de decisão, e não o produto final.',
-  acompanhamento: 'Vistorias periódicas com relatório visual, as-built e checklist de qualidade na entrega.'
+  numero:         'Quanto custa aparece antes de você assinar. É regra da casa.',
+  prazo:          'Cronograma com prazo e entrega nomeada em cada etapa.',
+  resposta:       'Quem te atende é quem desenha o projeto, e a entrega termina em reunião presencial com manual de uso.',
+  detalhamento:   'O desenho completo da obra, com elétrica, hidráulica e estrutura conferidas juntas. A imagem em 3D é ferramenta de decisão, e não o produto final.',
+  acompanhamento: 'Visitas periódicas com relatório, e conferência item por item na entrega.'
 };
 
 function waLink(t) { return `https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(t)}`; }
@@ -431,18 +431,18 @@ function renderResult() {
   const calcHref = `${CONFIG.CALCULADORA_URL}?${new URLSearchParams({ ...(A.area ? { area: A.area } : {}), escopo: A.escopo === 'naosei' ? 'ambos' : (A.escopo || 'arquitetura'), ...(A.marcenaria ? { marcenaria: A.marcenaria } : {}) })}`;
   const SEG = {
     quente: {
-      intro: 'Pelo momento e pela faixa que você informou, o próximo passo é a Sessão de Viabilidade. É a primeira etapa do Método, e o item 1 do seu plano.',
+      intro: 'Pelo momento e pelo valor que você informou, o próximo passo é a Sessão de Viabilidade. É a primeira etapa do Método, e o item 1 do seu plano.',
       primary: { label: 'Agendar a Sessão de Viabilidade', href: waLink(resumo + '\n\nQuero agendar uma Sessão de Viabilidade.') },
-      secondary: { label: 'Antes, ver a estimativa em R$/m²', href: calcHref }
+      secondary: { label: 'Quero falar no WhatsApp antes', href: waLink(resumo + '\n\nQuero tirar uma dúvida antes de agendar.') }
     },
     morno: {
       intro: 'Seu projeto está na janela certa: dá tempo de colocar as decisões em ordem antes de contratar qualquer coisa. O próximo passo é a Sessão de Viabilidade, e o plano acima vai junto.',
       primary: { label: 'Agendar a Sessão de Viabilidade', href: waLink(resumo + '\n\nQuero agendar uma Sessão de Viabilidade.') },
-      secondary: { label: 'Prefiro receber o Guia Etapas VisionOne primeiro', href: waLink(resumo + '\n\nQuero receber o Guia Etapas VisionOne.') }
+      secondary: { label: 'Quero falar no WhatsApp antes', href: waLink(resumo + '\n\nQuero tirar uma dúvida antes de agendar.') }
     },
     frio: {
       intro: 'Sem data e sem número definidos, o que ajuda agora é guardar esta ordem. Quando a data chegar, você já sabe por onde começar e com quem.',
-      primary: { label: 'Receber o Guia Etapas VisionOne', href: waLink(resumo + '\n\nQuero receber o Guia Etapas VisionOne.') },
+      primary: { label: 'Guardar este plano no WhatsApp', href: waLink(resumo + '\n\nQuero guardar este plano para quando a data chegar.') },
       secondary: { label: 'Conhecer o Método', href: CONFIG.METODO_URL }
     }
   }[seg];
@@ -450,7 +450,7 @@ function renderResult() {
   return `
     ${kicker('Seu plano de decisões')}
     ${title(`${nome ? nome + ', o' : 'O'} seu projeto tem ${plan.length} decisões abertas. Nesta ordem.`)}
-    <p class="text-[17px] leading-[1.55] text-verde-texto max-w-[52ch] mb-10">Isso não é um orçamento. É a sequência que evita decidir com a obra parada, e o que a Arq One entrega em cada etapa para isso não acontecer.</p>
+    <p class="text-[17px] leading-[1.55] text-verde-texto max-w-[52ch] mb-10">Isso não é um orçamento. É a sequência que evita decidir com a obra parada, e o que a Arq One faz em cada etapa para isso não acontecer.</p>
 
     <ol class="grid gap-0 border-t border-marrom/20 mb-12">
       ${plan.map((p, i) => `
@@ -459,7 +459,7 @@ function renderResult() {
         <div>
           <h2 class="text-[20px] sm:text-[22px] font-medium leading-snug mb-2">${h(p.title)}</h2>
           <p class="text-[16px] leading-[1.55] mb-3 max-w-[56ch]">${h(p.why)}</p>
-          <p class="text-[13px] font-semibold tracking-[.06em] uppercase text-verde-texto">O que entregamos · ${h(p.entrega)}</p>
+          <p class="text-[13px] font-semibold tracking-[.06em] uppercase text-verde-texto">O que fazemos · ${h(p.entrega)}</p>
         </div>
       </li>`).join('')}
     </ol>
@@ -474,11 +474,11 @@ function renderResult() {
     </div>
 
     ${kicker('Próximo passo')}
-    <h2 class="text-[24px] sm:text-[28px] leading-[1.14] tracking-[-.012em] font-normal max-w-[24ch] mb-3">Sessão de Viabilidade: a primeira etapa do Método, sem compromisso.</h2>
+    <h2 class="text-[24px] sm:text-[28px] leading-[1.14] tracking-[-.012em] font-normal max-w-[24ch] mb-3">Sessão de Viabilidade: a primeira etapa do Método.</h2>
     <p class="text-[16px] leading-[1.55] text-verde-texto max-w-[52ch] mb-6">${h(SEG.intro)}</p>
     <ul class="grid gap-3 text-[16px] leading-[1.5] max-w-[56ch] mb-8">
-      <li class="grid grid-cols-[28px_minmax(0,1fr)] gap-2"><span class="text-[13px] font-semibold tracking-[.14em] text-marrom-medio pt-[4px]">01</span><span>Você conta o projeto. A gente lê o ${['apto'].includes(A.momento) ? 'apartamento' : 'terreno ou a casa'} e o que ele permite.</span></li>
-      <li class="grid grid-cols-[28px_minmax(0,1fr)] gap-2"><span class="text-[13px] font-semibold tracking-[.14em] text-marrom-medio pt-[4px]">02</span><span>Você sai com a faixa de investimento em R$/m², a ordem das próximas decisões e o prazo de cada fase.</span></li>
+      <li class="grid grid-cols-[28px_minmax(0,1fr)] gap-2"><span class="text-[13px] font-semibold tracking-[.14em] text-marrom-medio pt-[4px]">01</span><span>Você conta o projeto. A gente lê o terreno, a casa ou o apartamento e o que ele permite.</span></li>
+      <li class="grid grid-cols-[28px_minmax(0,1fr)] gap-2"><span class="text-[13px] font-semibold tracking-[.14em] text-marrom-medio pt-[4px]">02</span><span>Você sai com quanto custa por metro quadrado, a ordem das próximas decisões e o prazo de cada etapa.</span></li>
       <li class="grid grid-cols-[28px_minmax(0,1fr)] gap-2"><span class="text-[13px] font-semibold tracking-[.14em] text-marrom-medio pt-[4px]">03</span><span>Se o seu caso não for para a Arq One, você sai sabendo por quê. A gente diz isso na primeira conversa.</span></li>
     </ul>
     <div class="flex flex-wrap gap-4 items-center mb-4">
